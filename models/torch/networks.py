@@ -45,7 +45,6 @@ def create_emb_layer(weights_matrix, non_trainable=False):
     return emb_layer, num_embeddings, embedding_dim
 
 
-
 class TestEncoderRNN(nn.Module):
     def __init__(self, input_size, embed_size, hidden_size, weights_matrix):
         super(TestEncoderRNN, self).__init__()
@@ -56,10 +55,8 @@ class TestEncoderRNN(nn.Module):
         # self.dropout_p = dropout_p
         self.embedding, num_embeddings, self.embed_size = create_emb_layer(weights_matrix, False)
 
-
-
         # self.embedding = nn.Embedding(self.input_size, self.embed_size)
-        self.gru = nn.GRU(self.embed_size,self.hidden_size)
+        self.gru = nn.GRU(self.embed_size, self.hidden_size)
 
     def forward(self, input, hidden):
         return self.gru(self.embedding(input).view(1, 1, -1), hidden)
@@ -68,7 +65,6 @@ class TestEncoderRNN(nn.Module):
         # output, hidden = self.gru(output, hidden)
         # output = self.dropout(output)
         # return output, hidden
-
 
     def initHidden(self):
         result = Variable(torch.zeros(1, 1, self.hidden_size))
@@ -79,11 +75,6 @@ class TestEncoderRNN(nn.Module):
 
     def resetWeights(self):
         self.embedding, num_embeddings, self.embed_size = create_emb_layer(self.init_weights, False)
-
-
-
-
-
 
 
 class DecoderRNN(nn.Module):
@@ -114,7 +105,6 @@ class DecoderRNN(nn.Module):
             return result.cuda()
         else:
             return result
-
 
 
 class AttnDecoderRNN(nn.Module):
@@ -206,7 +196,7 @@ class NewAttnDecoderRNN(nn.Module):
             return result
 
     def testing_mode(self, fh):
-        self.in_test=True
+        self.in_test = True
         self.writer = csv.writer(fh)
 
 
@@ -220,7 +210,7 @@ class CombinedAttnDecoderRNN(nn.Module):
         self.max_length = max_length
 
         self.embedding = nn.Embedding(self.output_size, self.embed_size)
-        self.attn = nn.Linear(self.embed_size + self.hidden_size*2, 1)
+        self.attn = nn.Linear(self.embed_size + self.hidden_size * 2, 1)
         self.dropout = nn.Dropout(self.dropout_p)
         self.gru = nn.GRU(self.embed_size + self.hidden_size, self.hidden_size)
         self.out = nn.Linear(self.hidden_size, self.output_size)
@@ -284,7 +274,6 @@ class Langmod(nn.Module):
     def init_hidden(self, bsz):
         weight = next(self.parameters()).data
         return Variable(weight.new(1, bsz, self.hidden_size).zero_())
-
 
 # class simple_classifier(nn.Module):
 #     def __init__(self, input_lang):
